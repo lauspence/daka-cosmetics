@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Menu } from "lucide-react";
 import { getCategories } from "@/lib/categories";
 import CartIcon from "@/components/CartIcon";
+import MobileNav from "@/components/MobileNav";
 
 function TikTokIcon({ size = 18 }: { size?: number }) {
   return (
@@ -26,12 +26,7 @@ export default async function Header() {
     <header className="sticky top-0 z-40 w-full bg-cream/80 shadow-sm backdrop-blur-md">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <div className="flex items-center gap-6">
-          <button
-            aria-label="Open menu"
-            className="text-primary transition hover:opacity-80 md:hidden"
-          >
-            <Menu size={22} />
-          </button>
+          <MobileNav categories={categories} />
           <div className="hidden gap-6 md:flex">
             {categories.map((cat) => (
               <Link

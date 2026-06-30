@@ -70,3 +70,23 @@ create policy "Authenticated can upload product images" on storage.objects
 
 create policy "Authenticated can delete product images" on storage.objects
   for delete to authenticated using (bucket_id = 'product-images');
+
+-- M-Pesa STK Push transactions.
+-- No RLS policies are defined on purpose: all access goes through server
+-- API routes using the service_role key, which bypasses RLS entirely.
+-- Anon/authenticated clients get zero direct access to this table.
+create table if not exists mpesa_transactions (
+  id uuid primary key default gen_random_uuid(),
+  checkout_request_id text not null unique,
+  merchant_request_id text,
+  phone text not null,
+  amount numeric(10, 2) not null,
+  items jsonb not null default '[]',
+  status text not null default 'pending' check (status in ('pending', 'success', 'failed')),
+  result_desc text,
+  mpesa_receipt_number text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table mpesa_transactions enable row level security;
